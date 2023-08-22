@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<LangVersion>latest</LangVersion>
+		<AssemblyName>Process Monitor</AssemblyName>
+		<ApplicationIcon>Images\icons8-heart-monitor-48.ico</ApplicationIcon>
+		<Title>An app to monitor processes and auto restarting features</Title>
+		<Authors>Rao Hammas</Authors>
+		<Description>A windows application to monitor processes running on the system with features like auto restarting if closed.</Description>
+		<Copyright>Rao Hammas</Copyright>
+		<PackageProjectUrl>https://github.com/RaoHammas/Windows-Process-Monitor</PackageProjectUrl>
+		<PackageIcon>icons8-heart-monitor-48.png</PackageIcon>
+		<NeutralLanguage>en</NeutralLanguage>
+		<RepositoryUrl>https://github.com/RaoHammas/Windows-Process-Monitor</RepositoryUrl>
+		<PackageTags>Windows, Process Monitor, Application</PackageTags>
+	</PropertyGroup>
+	<PropertyGroup>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="Images\icons8-heart-monitor-48.ico" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
+		<PackageReference Include="MaterialDesignThemes" Version="5.0.0-ci354" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.7.23375.6" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+		<PackageReference Include="System.Management" Version="8.0.0-preview.7.23375.6" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MonitorApp.DataAccess\MonitorApp.DataAccess.csproj" />
+		<ProjectReference Include="..\MonitorApp.Domain\MonitorApp.Domain.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="Images\icons8-heart-monitor-48.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="MonitorApp.db">
+			<CopyToOutputDirectory></CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Images\icons8-heart-monitor-48.png" />
+	</ItemGroup>
+</Project>

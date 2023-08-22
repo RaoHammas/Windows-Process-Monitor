@@ -1,0 +1,556 @@
+﻿<Window
+    x:Class="MonitorApp.Views.ShellWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:MonitorApp.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:viewModels="clr-namespace:MonitorApp.ViewModels"
+    xmlns:views="clr-namespace:MonitorApp.Views"
+    x:Name="Win"
+    Title="Applications Monitor"
+    MinWidth="1280"
+    MinHeight="720"
+    d:DataContext="{d:DesignInstance viewModels:ShellViewModel,
+                                     IsDesignTimeCreatable=False}"
+    Background="White"
+    FontFamily="{md:MaterialDesignFont}"
+    FontWeight="Light"
+    ShowInTaskbar="True"
+    TextElement.FontSize="14"
+    TextElement.FontWeight="Medium"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <md:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
+    </Window.Resources>
+    <Grid>
+        <md:DialogHost
+            VerticalAlignment="Stretch"
+            CloseOnClickAway="True"
+            DialogTheme="Inherit"
+            Identifier="RootDialog"
+            OverlayBackground="{DynamicResource PrimaryHueDarkBrush}"
+            Placement="Center">
+
+            <Grid Margin="30">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel
+                        Grid.Row="1"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <ComboBox
+                            x:Name="ComboBoxAllProcesses"
+                            Width="500"
+                            HorizontalAlignment="Left"
+                            md:HintAssist.Hint="Running Processes"
+                            DisplayMemberPath="DisplayName"
+                            FontSize="14"
+                            IsEditable="True"
+                            ItemsSource="{Binding AllRunningProcessesShown, Mode=OneWay}">
+                            <!--<ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:AppToMonitor}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding ProcessName}" />
+                                <TextBlock Margin="20,0,0,0" Opacity="0.8">
+                                    <Run Text="(" />
+                                    <Run Text="{Binding AppName}" />
+                                    <Run Text=")" />
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>-->
+                        </ComboBox>
+                        <Button
+                            Margin="10,0,0,0"
+                            Padding="10,5,10,5"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding MonitorAppCommand}"
+                            CommandParameter="{Binding ElementName=ComboBoxAllProcesses, Path=SelectedItem}"
+                            FontWeight="Bold"
+                            ToolTip="Add selected process to monitoring list"
+                            Visibility="{Binding ElementName=ComboBoxAllProcesses, Path=SelectedItem, Converter={StaticResource NullableToVisibilityConverter}}">
+                            <md:PackIcon Kind="Add" />
+                        </Button>
+
+                        <Button
+                            Margin="10,0,0,0"
+                            Padding="10,5,10,5"
+                            VerticalAlignment="Stretch"
+                            md:ButtonProgressAssist.IsIndeterminate="True"
+                            md:ButtonProgressAssist.IsIndicatorVisible="{Binding LoadAllRunningProcessesCommand.IsRunning}"
+                            Command="{Binding LoadAllRunningProcessesCommand}"
+                            FontWeight="Bold"
+                            ToolTip="Refresh running processes list">
+                            <md:PackIcon Kind="Refresh" />
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Center"
+                            Text="Show Apps only" />
+                        <ToggleButton
+                            Width="50"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding ApplyFilterCommand}"
+                            Cursor="Hand"
+                            IsChecked="{Binding ShowProcessesWithWindowsOnly}"
+                            Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                            ToolTip="If checked, It will show only the applications with GUI" />
+
+                        <TextBlock
+                            Margin="20,0,10,0"
+                            VerticalAlignment="Center"
+                            Text="For Current User Only" />
+                        <ToggleButton
+                            Width="50"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding ApplyFilterCommand}"
+                            Cursor="Hand"
+                            IsChecked="{Binding ShowForCurrentUserOnly}"
+                            Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                            ToolTip="Show only the apps owned by the current user" />
+
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="2"
+                        Margin="0,10,0,10"
+                        Orientation="Horizontal">
+                        <md:Chip Background="IndianRed">
+                            <md:Chip.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="20"
+                                    Opacity="0.5"
+                                    ShadowDepth="5"
+                                    Color="IndianRed" />
+                            </md:Chip.Effect>
+                            <md:Chip.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Foreground="White">
+                                        <Run Text="TOTAL RUNNING PROCESSES | " />
+                                    </TextBlock>
+                                    <TextBlock VerticalAlignment="Center" Foreground="White">
+                                        <Run
+                                            FontSize="26"
+                                            FontWeight="Bold"
+                                            Text="{Binding AllRunningProcessesShown.Count, Mode=OneWay}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </md:Chip.Content>
+                        </md:Chip>
+                        <md:Chip Background="MediumSeaGreen">
+                            <md:Chip.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="20"
+                                    Opacity="0.5"
+                                    ShadowDepth="5"
+                                    Color="MediumSeaGreen" />
+                            </md:Chip.Effect>
+                            <md:Chip.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Foreground="White">
+                                        <Run Text="TOTAL MONITORING | " />
+                                    </TextBlock>
+                                    <TextBlock VerticalAlignment="Center" Foreground="White">
+                                        <Run
+                                            FontSize="26"
+                                            FontWeight="Bold"
+                                            Text="{Binding MonitoringProcesses.Count, Mode=OneWay}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </md:Chip.Content>
+                        </md:Chip>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="2"
+                        Margin="0,10,0,10"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <Button
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Padding="10,5,10,5"
+                            VerticalAlignment="Stretch"
+                            md:ButtonProgressAssist.IsIndeterminate="True"
+                            md:ButtonProgressAssist.IsIndicatorVisible="{Binding LoadAllMonitoringProcessesCommand.IsRunning}"
+                            Command="{Binding LoadAllMonitoringProcessesCommand}"
+                            FontWeight="Bold"
+                            ToolTip="Refresh monitoring processes list">
+                            <md:PackIcon Kind="Refresh" />
+                        </Button>
+                        <Button
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Padding="10,5,10,5"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding ToggleMonitoringPauseResumeCommand}"
+                            FontWeight="Bold">
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMonitoringOn}" Value="False">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <md:PackIcon Kind="Play" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="ToolTip" Value="Resume monitoring all processes" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsMonitoringOn}" Value="True">
+                                            <Setter Property="Content">
+                                                <Setter.Value>
+                                                    <md:PackIcon Kind="Pause" />
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="ToolTip" Value="Pause monitoring all processes" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Padding="10,5,10,5"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding OpenEmailSettingsCommand}"
+                            FontWeight="Bold"
+                            ToolTip="Click here to set email details">
+                            <md:PackIcon Kind="EmailEdit" />
+                        </Button>
+                    </StackPanel>
+
+                    <Grid Grid.Row="3">
+                        <DataGrid
+                            md:DataGridAssist.ColumnHeaderPadding="10 10 10 10"
+                            AutoGenerateColumns="False"
+                            Background="White"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            FontWeight="Light"
+                            HeadersVisibility="All"
+                            HorizontalGridLinesBrush="LightGray"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding MonitoringProcesses}"
+                            LoadingRow="DataGrid_OnLoadingRow"
+                            RowHeight="50"
+                            SelectionMode="Single"
+                            SelectionUnit="FullRow"
+                            VerticalGridLinesBrush="LightGray">
+                            <DataGrid.RowHeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+                                        Padding="10,0,10,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding}" />
+                                </DataTemplate>
+                            </DataGrid.RowHeaderTemplate>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="80"
+                                    Binding="{Binding PID}"
+                                    ElementStyle="{StaticResource DgCenterCellContent}"
+                                    Header="PID" />
+                                <DataGridTextColumn
+                                    Binding="{Binding DisplayName}"
+                                    ElementStyle="{StaticResource DgCenterCellContent}"
+                                    Header="Process Name" />
+
+                                <DataGridTemplateColumn
+                                    Width="*"
+                                    Header="Process Path"
+                                    HeaderStyle="{StaticResource DgHeaderCenter}"
+                                    SortDirection="Ascending"
+                                    SortMemberPath="Status">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                VerticalAlignment="Top"
+                                                Text="{Binding FullPath}"
+                                                TextTrimming="CharacterEllipsis"
+                                                TextWrapping="Wrap"
+                                                ToolTip="{Binding FullPath}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn
+                                    Width="100"
+                                    Header="Instances #"
+                                    HeaderStyle="{StaticResource DgHeaderCenter}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                Width="30"
+                                                Height="30"
+                                                Padding="5"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                CornerRadius="100">
+                                                <TextBlock
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding NoOfInstances}" />
+
+                                                <!--
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="MediumSeaGreen" />
+                                                        <Setter Property="TextBlock.Foreground" Value="White" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding NoOfInstances}" Value="0">
+                                                                <Setter Property="Background" Value="IndianRed" />
+                                                                <Setter Property="TextBlock.Foreground" Value="White" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>-->
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn
+                                    Width="150"
+                                    Header="Status"
+                                    HeaderStyle="{StaticResource DgHeaderCenter}"
+                                    SortDirection="Ascending"
+                                    SortMemberPath="Status">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                Height="30"
+                                                Padding="10,5,10,5"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Center"
+                                                CornerRadius="12">
+                                                <TextBlock
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding Status}" />
+
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Monitoring">
+                                                                <Setter Property="Background" Value="MediumSeaGreen" />
+                                                                <Setter Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            BlurRadius="20"
+                                                                            Opacity="0.5"
+                                                                            ShadowDepth="5"
+                                                                            Color="MediumSeaGreen" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+
+                                                                <Setter Property="TextBlock.Foreground" Value="White" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Stopped">
+                                                                <Setter Property="Background" Value="IndianRed" />
+                                                                <Setter Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            BlurRadius="20"
+                                                                            Opacity="0.5"
+                                                                            ShadowDepth="5"
+                                                                            Color="IndianRed" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                                <Setter Property="TextBlock.Foreground" Value="White" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn
+                                    Width="90"
+                                    Header="Settings"
+                                    HeaderStyle="{StaticResource DgHeaderCenter}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Width="30"
+                                                Height="30"
+                                                Margin="0"
+                                                Padding="0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                md:ButtonAssist.CornerRadius="100"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.OpenAppSettingsCommand}"
+                                                CommandParameter="{Binding}"
+                                                ToolTip="Configure monitoring settings">
+                                                <md:PackIcon Kind="Settings" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn
+                                    Width="90"
+                                    Header="Action"
+                                    HeaderStyle="{StaticResource DgHeaderCenter}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Width="30"
+                                                Height="30"
+                                                Padding="5"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                md:ButtonAssist.CornerRadius="100"
+                                                FontWeight="Bold">
+                                                <Button.Style>
+                                                    <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Stopped">
+                                                                <Setter Property="ToolTip" Value="Click to start the process" />
+                                                                <Setter Property="Command" Value="{Binding ElementName=Win, Path=DataContext.StartProcessCommand}" />
+                                                                <Setter Property="CommandParameter" Value="{Binding}" />
+                                                                <Setter Property="Content">
+                                                                    <Setter.Value>
+                                                                        <md:PackIcon Kind="Play" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Monitoring">
+                                                                <Setter Property="ToolTip" Value="Click to kill the process" />
+                                                                <Setter Property="Command" Value="{Binding ElementName=Win, Path=DataContext.KillProcessCommand}" />
+                                                                <Setter Property="CommandParameter" Value="{Binding}" />
+                                                                <Setter Property="Content">
+                                                                    <Setter.Value>
+                                                                        <md:PackIcon Kind="Stop" />
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn
+                                    Width="90"
+                                    Header="Remove"
+                                    HeaderStyle="{StaticResource DgHeaderCenter}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Width="30"
+                                                Height="30"
+                                                Margin="0"
+                                                Padding="0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                md:ButtonAssist.CornerRadius="100"
+                                                Background="Red"
+                                                BorderBrush="Red"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StopMonitoringAppCommand}"
+                                                CommandParameter="{Binding}"
+                                                ToolTip="Stop monitoring this process">
+                                                <md:PackIcon Kind="DeleteForever" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <Grid d:IsHidden="True" Visibility="{Binding IsMonitoringOn, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                            <Grid.Background>
+                                <SolidColorBrush Opacity="0.7" Color="White" />
+                            </Grid.Background>
+
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Vertical">
+                                <Button
+                                    Width="100"
+                                    Height="100"
+                                    Margin="10,0,0,0"
+                                    Padding="0"
+                                    VerticalAlignment="Stretch"
+                                    md:ButtonAssist.CornerRadius="100"
+                                    Command="{Binding ToggleMonitoringPauseResumeCommand}"
+                                    FontWeight="Bold">
+                                    <Button.Style>
+                                        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsMonitoringOn}" Value="False">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <md:PackIcon
+                                                                Width="48"
+                                                                Height="48"
+                                                                Kind="Play" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="ToolTip" Value="Resume monitoring all processes" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsMonitoringOn}" Value="True">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <md:PackIcon
+                                                                Width="48"
+                                                                Height="48"
+                                                                Kind="Pause" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="ToolTip" Value="Pause monitoring all processes" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <TextBlock
+                                    Margin="0,30,0,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="28"
+                                    FontWeight="Light"
+                                    Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                                    Text="Monitoring is stopped for all processes" />
+                            </StackPanel>
+
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+                <controls:SnackbarControlView
+                    MinWidth="400"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    DataContext="{Binding SnackbarControlViewModel}" />
+            </Grid>
+        </md:DialogHost>
+    </Grid>
+</Window>

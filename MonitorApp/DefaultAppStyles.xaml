@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="MaterialDesignShadow">LightGray</Color>
+    <SolidColorBrush x:Key="MaterialDesignShadowBrush" Color="{StaticResource MaterialDesignShadow}" />
+
+
+    <SolidColorBrush x:Key="BrushSolidSuccessBackground" Color="#e4eacc" />
+    <SolidColorBrush x:Key="BrushSolidSuccessForeground" Color="DarkOliveGreen" />
+
+    <SolidColorBrush
+        x:Key="BrushSolidDangerBackground"
+        Opacity="0.3"
+        Color="IndianRed" />
+    <SolidColorBrush x:Key="BrushSolidDangerForeground" Color="DarkRed" />
+
+    <SolidColorBrush
+        x:Key="BrushSolidWarningBackground"
+        Opacity="0.3"
+        Color="Orange" />
+    <SolidColorBrush
+        x:Key="BrushSolidWarningForeground"
+        Opacity="1"
+        Color="DarkGoldenrod" />
+
+    <Style
+        x:Key="DgHeaderCenter"
+        BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}"
+        TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="DgCenterCellContent" TargetType="FrameworkElement">
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+
+</ResourceDictionary>

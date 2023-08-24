@@ -66,12 +66,17 @@ public class ProcessHelper : IProcessHelper
     ///<inheritdoc/>
     public ProcessToMonitor? TryStarting(ProcessToMonitor process)
     {
-        var newProcess = new Process();
-        newProcess.StartInfo.FileName = process.FullPath;
-        var status = newProcess.Start();
-        if (status)
+        var objProcessInfo = new ProcessStartInfo();
+       
+        objProcessInfo.FileName = process.FullPath;
+        objProcessInfo.UseShellExecute = true;
+
+        var started = Process.Start(objProcessInfo);
+
+        if (started is { HasExited: false })
         {
-            return MapProcess(newProcess);
+            started.EnableRaisingEvents = true;
+            return MapProcess(started);
         }
 
         return null;
@@ -109,11 +114,33 @@ public class ProcessHelper : IProcessHelper
 
     private string GetMainModuleFilePath(int processId)
     {
-        string wmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + processId;
+        var wmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + processId;
         using var searcher = new ManagementObjectSearcher(wmiQueryString);
         using var results = searcher.Get();
         var mo = results.Cast<ManagementObject>().FirstOrDefault();
 
         return mo != null ? (string)mo["ExecutablePath"] : string.Empty;
     }
+
+
+    public void OpenActivationKeysLinkInBrowser()
+    {
+        try
+        {
+            var objProcessInfo = new ProcessStartInfo
+            {
+                FileName = "https://www.buymeacoffee.com/hammas/e/161857",
+                UseShellExecute = true
+            };
+
+            Process.Start(objProcessInfo);
+        }
+        catch (Exception ex)
+        {
+            
+        }
+        
+    }
+
+
 }

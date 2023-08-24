@@ -25,6 +25,7 @@ public partial class ShellViewModel : ObservableObject, IShell
     private readonly IEmailService _emailService;
     [ObservableProperty] private ISnackbarControlViewModel _snackbarControlViewModel;
     private readonly IProcessWatcherService _processWatcherService;
+    private readonly IActivationViewModel _activationViewModel;
 
 
     [ObservableProperty] private ObservableCollection<ProcessToMonitor> _allRunningProcesses = new();
@@ -45,7 +46,8 @@ public partial class ShellViewModel : ObservableObject, IShell
         IEmailSettingsViewModel emailSettingsViewModel,
         IEmailService emailService,
         ISnackbarControlViewModel snackbarControlViewModel,
-        IProcessWatcherService processWatcherService
+        IProcessWatcherService processWatcherService,
+        IActivationViewModel activationViewModel
     )
     {
         _processHelper = processHelper;
@@ -56,6 +58,7 @@ public partial class ShellViewModel : ObservableObject, IShell
         _emailService = emailService;
         _snackbarControlViewModel = snackbarControlViewModel;
         _processWatcherService = processWatcherService;
+        _activationViewModel = activationViewModel;
         _currentSessionId = processHelper.GetCurrentProcessSessionId();
 
 
@@ -321,22 +324,28 @@ public partial class ShellViewModel : ObservableObject, IShell
     [RelayCommand]
     public async Task OpenEmailSettings()
     {
-        var mail = await _dbService.GetEmailDetailsAsync();
-        if (mail != null)
+        var key = await _dbService.GetActivationKeyAsync();
+        if (KeysHelper.IsValidKey(key))
         {
-            _emailSettingsViewModel.EmailDetails = mail;
+            var mail = await _dbService.GetEmailDetailsAsync();
+            if (mail != null)
+            {
+                _emailSettingsViewModel.EmailDetails = mail;
+            }
+
+            await _dialogService.ShowEmailSettings(_emailSettingsViewModel);
+        }
+        else
+        {
+            await _dialogService.ShowActivation(_activationViewModel);
         }
 
-        await _dialogService.ShowEmailSettings(_emailSettingsViewModel);
     }
    
     [RelayCommand]
     public void StartProcess(ProcessToMonitor process)
     {
-        if (_processHelper.TryStarting(process) == null)
-        {
-            SnackbarControlViewModel.Show($"Failed to start the {process.DisplayName}");
-        }
+        _processHelper.TryStarting(process);
     }
 
     [RelayCommand]

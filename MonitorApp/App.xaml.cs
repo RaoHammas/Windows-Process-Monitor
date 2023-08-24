@@ -79,6 +79,7 @@ public partial class App : Application
         services.AddTransient<IProcessSettingsViewModel, ProcessSettingsViewModel>();
         services.AddTransient<IEmailSettingsViewModel, EmailSettingsViewModel>();
         services.AddTransient<ISnackbarControlViewModel, SnackbarControlViewModel>();
+        services.AddTransient<IActivationViewModel, ActivationViewModel>();
         services.AddTransient<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
 

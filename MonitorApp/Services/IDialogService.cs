@@ -6,4 +6,5 @@ public interface IDialogService
 {
     Task ShowProcessSettings(object dataContext);
     Task ShowEmailSettings(object dataContext);
+    Task ShowActivation(object dataContext);
 }

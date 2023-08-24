@@ -46,4 +46,16 @@ public interface IDbService
     /// </summary>
     /// <returns></returns>
     Task<EmailDetails?> GetEmailDetailsAsync();
+
+    /// <summary>
+    /// Activate application
+    /// </summary>
+    /// <returns></returns>
+    Task<int> ActivateAsync(string key, string email);
+
+    /// <summary>
+    /// Get activation key
+    /// </summary>
+    /// <returns></returns>
+    Task<string> GetActivationKeyAsync();
 }

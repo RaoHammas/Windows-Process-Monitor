@@ -34,7 +34,7 @@
             OverlayBackground="{DynamicResource PrimaryHueDarkBrush}"
             Placement="Center">
 
-            <Grid Margin="30">
+            <Grid>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -43,204 +43,167 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <StackPanel
-                        Grid.Row="1"
-                        HorizontalAlignment="Left"
-                        Orientation="Horizontal">
-                        <ComboBox
-                            x:Name="ComboBoxAllProcesses"
-                            Width="500"
-                            HorizontalAlignment="Left"
-                            md:HintAssist.Hint="Running Processes"
-                            DisplayMemberPath="DisplayName"
-                            FontSize="14"
-                            IsEditable="True"
-                            ItemsSource="{Binding AllRunningProcessesShown, Mode=OneWay}">
-                            <!--<ComboBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:AppToMonitor}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding ProcessName}" />
-                                <TextBlock Margin="20,0,0,0" Opacity="0.8">
-                                    <Run Text="(" />
-                                    <Run Text="{Binding AppName}" />
-                                    <Run Text=")" />
-                                </TextBlock>
+                    <Grid Grid.Row="0" Background="#EBE1FF">
+                        <Grid Margin="20,10,20,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="0,10,0,10"
+                                Orientation="Horizontal">
+                                <md:Chip Background="IndianRed">
+                                    <md:Chip.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="20"
+                                            Opacity="0.5"
+                                            ShadowDepth="5"
+                                            Color="IndianRed" />
+                                    </md:Chip.Effect>
+                                    <md:Chip.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Foreground="White">
+                                                <Run Text="TOTAL RUNNING PROCESSES | " />
+                                            </TextBlock>
+                                            <TextBlock VerticalAlignment="Center" Foreground="White">
+                                                <Run
+                                                    FontSize="26"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding AllRunningProcessesShown.Count, Mode=OneWay}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </md:Chip.Content>
+                                </md:Chip>
+                                <md:Chip Background="MediumSeaGreen">
+                                    <md:Chip.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="20"
+                                            Opacity="0.5"
+                                            ShadowDepth="5"
+                                            Color="MediumSeaGreen" />
+                                    </md:Chip.Effect>
+                                    <md:Chip.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Foreground="White">
+                                                <Run Text="TOTAL MONITORING | " />
+                                            </TextBlock>
+                                            <TextBlock VerticalAlignment="Center" Foreground="White">
+                                                <Run
+                                                    FontSize="26"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding MonitoringProcesses.Count, Mode=OneWay}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </md:Chip.Content>
+                                </md:Chip>
                             </StackPanel>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>-->
-                        </ComboBox>
-                        <Button
-                            Margin="10,0,0,0"
-                            Padding="10,5,10,5"
-                            VerticalAlignment="Stretch"
-                            Command="{Binding MonitorAppCommand}"
-                            CommandParameter="{Binding ElementName=ComboBoxAllProcesses, Path=SelectedItem}"
-                            FontWeight="Bold"
-                            ToolTip="Add selected process to monitoring list"
-                            Visibility="{Binding ElementName=ComboBoxAllProcesses, Path=SelectedItem, Converter={StaticResource NullableToVisibilityConverter}}">
-                            <md:PackIcon Kind="Add" />
-                        </Button>
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <ComboBox
+                                    x:Name="ComboBoxAllProcesses"
+                                    Width="500"
+                                    HorizontalAlignment="Left"
+                                    md:HintAssist.Hint="Running Processes"
+                                    DisplayMemberPath="DisplayName"
+                                    FontSize="14"
+                                    IsEditable="True"
+                                    ItemsSource="{Binding AllRunningProcessesShown, Mode=OneWay}" />
+                                <Button
+                                    Margin="10,0,0,0"
+                                    Padding="10,5,10,5"
+                                    VerticalAlignment="Stretch"
+                                    Command="{Binding MonitorAppCommand}"
+                                    CommandParameter="{Binding ElementName=ComboBoxAllProcesses, Path=SelectedItem}"
+                                    FontWeight="Bold"
+                                    ToolTip="Add selected process to monitoring list"
+                                    Visibility="{Binding ElementName=ComboBoxAllProcesses, Path=SelectedItem, Converter={StaticResource NullableToVisibilityConverter}}">
+                                    <md:PackIcon Kind="Add" />
+                                </Button>
 
-                        <Button
-                            Margin="10,0,0,0"
-                            Padding="10,5,10,5"
-                            VerticalAlignment="Stretch"
-                            md:ButtonProgressAssist.IsIndeterminate="True"
-                            md:ButtonProgressAssist.IsIndicatorVisible="{Binding LoadAllRunningProcessesCommand.IsRunning}"
-                            Command="{Binding LoadAllRunningProcessesCommand}"
-                            FontWeight="Bold"
-                            ToolTip="Refresh running processes list">
-                            <md:PackIcon Kind="Refresh" />
-                        </Button>
-                    </StackPanel>
+                                <Button
+                                    Height="30"
+                                    Margin="10,0,0,0"
+                                    Padding="10,5,10,5"
+                                    VerticalAlignment="Stretch"
+                                    md:ButtonProgressAssist.IsIndeterminate="True"
+                                    md:ButtonProgressAssist.IsIndicatorVisible="{Binding LoadAllRunningProcessesCommand.IsRunning}"
+                                    Command="{Binding LoadAllRunningProcessesCommand}"
+                                    FontWeight="Bold"
+                                    ToolTip="Refresh running processes list">
+                                    <md:PackIcon Kind="Refresh" />
+                                </Button>
 
-                    <StackPanel
-                        Grid.Row="1"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                        <TextBlock
-                            Margin="0,0,10,0"
-                            VerticalAlignment="Center"
-                            Text="Show Apps only" />
-                        <ToggleButton
-                            Width="50"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Command="{Binding ApplyFilterCommand}"
-                            Cursor="Hand"
-                            IsChecked="{Binding ShowProcessesWithWindowsOnly}"
-                            Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                            ToolTip="If checked, It will show only the applications with GUI" />
 
-                        <TextBlock
-                            Margin="20,0,10,0"
-                            VerticalAlignment="Center"
-                            Text="For Current User Only" />
-                        <ToggleButton
-                            Width="50"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Command="{Binding ApplyFilterCommand}"
-                            Cursor="Hand"
-                            IsChecked="{Binding ShowForCurrentUserOnly}"
-                            Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                            ToolTip="Show only the apps owned by the current user" />
+                                <Button
+                                    Height="30"
+                                    Margin="50,0,0,0"
+                                    Padding="10,5,10,5"
+                                    VerticalAlignment="Stretch"
+                                    md:ButtonProgressAssist.IsIndeterminate="True"
+                                    md:ButtonProgressAssist.IsIndicatorVisible="{Binding LoadAllMonitoringProcessesCommand.IsRunning}"
+                                    Command="{Binding LoadAllMonitoringProcessesCommand}"
+                                    FontWeight="Bold"
+                                    ToolTip="Refresh monitoring processes list">
+                                    <md:PackIcon Kind="Refresh" />
+                                </Button>
+                                <Button
+                                    Height="30"
+                                    Margin="10,0,0,0"
+                                    Padding="10,5,10,5"
+                                    VerticalAlignment="Stretch"
+                                    Command="{Binding ToggleMonitoringPauseResumeCommand}"
+                                    FontWeight="Bold">
+                                    <Button.Style>
+                                        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsMonitoringOn}" Value="False">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <md:PackIcon Kind="Play" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="ToolTip" Value="Resume monitoring all processes" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsMonitoringOn}" Value="True">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <md:PackIcon Kind="Pause" />
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="ToolTip" Value="Pause monitoring all processes" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
 
-                    </StackPanel>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                                <Button
+                                    Height="30"
+                                    Margin="10,0,0,0"
+                                    Padding="10,5,10,5"
+                                    VerticalAlignment="Stretch"
+                                    Command="{Binding OpenEmailSettingsCommand}"
+                                    FontWeight="Bold"
+                                    ToolTip="Click here to set email details">
+                                    <md:PackIcon Kind="EmailEdit" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
 
-                    <StackPanel
-                        Grid.Row="2"
-                        Margin="0,10,0,10"
-                        Orientation="Horizontal">
-                        <md:Chip Background="IndianRed">
-                            <md:Chip.Effect>
-                                <DropShadowEffect
-                                    BlurRadius="20"
-                                    Opacity="0.5"
-                                    ShadowDepth="5"
-                                    Color="IndianRed" />
-                            </md:Chip.Effect>
-                            <md:Chip.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Foreground="White">
-                                        <Run Text="TOTAL RUNNING PROCESSES | " />
-                                    </TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Foreground="White">
-                                        <Run
-                                            FontSize="26"
-                                            FontWeight="Bold"
-                                            Text="{Binding AllRunningProcessesShown.Count, Mode=OneWay}" />
-                                    </TextBlock>
-                                </StackPanel>
-                            </md:Chip.Content>
-                        </md:Chip>
-                        <md:Chip Background="MediumSeaGreen">
-                            <md:Chip.Effect>
-                                <DropShadowEffect
-                                    BlurRadius="20"
-                                    Opacity="0.5"
-                                    ShadowDepth="5"
-                                    Color="MediumSeaGreen" />
-                            </md:Chip.Effect>
-                            <md:Chip.Content>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock VerticalAlignment="Center" Foreground="White">
-                                        <Run Text="TOTAL MONITORING | " />
-                                    </TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Foreground="White">
-                                        <Run
-                                            FontSize="26"
-                                            FontWeight="Bold"
-                                            Text="{Binding MonitoringProcesses.Count, Mode=OneWay}" />
-                                    </TextBlock>
-                                </StackPanel>
-                            </md:Chip.Content>
-                        </md:Chip>
-                    </StackPanel>
 
-                    <StackPanel
-                        Grid.Row="2"
-                        Margin="0,10,0,10"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                        <Button
-                            Height="30"
-                            Margin="10,0,0,0"
-                            Padding="10,5,10,5"
-                            VerticalAlignment="Stretch"
-                            md:ButtonProgressAssist.IsIndeterminate="True"
-                            md:ButtonProgressAssist.IsIndicatorVisible="{Binding LoadAllMonitoringProcessesCommand.IsRunning}"
-                            Command="{Binding LoadAllMonitoringProcessesCommand}"
-                            FontWeight="Bold"
-                            ToolTip="Refresh monitoring processes list">
-                            <md:PackIcon Kind="Refresh" />
-                        </Button>
-                        <Button
-                            Height="30"
-                            Margin="10,0,0,0"
-                            Padding="10,5,10,5"
-                            VerticalAlignment="Stretch"
-                            Command="{Binding ToggleMonitoringPauseResumeCommand}"
-                            FontWeight="Bold">
-                            <Button.Style>
-                                <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsMonitoringOn}" Value="False">
-                                            <Setter Property="Content">
-                                                <Setter.Value>
-                                                    <md:PackIcon Kind="Play" />
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Setter Property="ToolTip" Value="Resume monitoring all processes" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsMonitoringOn}" Value="True">
-                                            <Setter Property="Content">
-                                                <Setter.Value>
-                                                    <md:PackIcon Kind="Pause" />
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Setter Property="ToolTip" Value="Pause monitoring all processes" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                        <Button
-                            Height="30"
-                            Margin="10,0,0,0"
-                            Padding="10,5,10,5"
-                            VerticalAlignment="Stretch"
-                            Command="{Binding OpenEmailSettingsCommand}"
-                            FontWeight="Bold"
-                            ToolTip="Click here to set email details">
-                            <md:PackIcon Kind="EmailEdit" />
-                        </Button>
-                    </StackPanel>
 
                     <Grid Grid.Row="3">
                         <DataGrid
                             md:DataGridAssist.ColumnHeaderPadding="10 10 10 10"
+                            AlternatingRowBackground="WhiteSmoke"
                             AutoGenerateColumns="False"
                             Background="White"
                             CanUserAddRows="False"
@@ -284,7 +247,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock
-                                                VerticalAlignment="Top"
+                                                VerticalAlignment="Center"
                                                 Text="{Binding FullPath}"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap"
@@ -469,8 +432,8 @@
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
                                                 md:ButtonAssist.CornerRadius="100"
-                                                Background="Red"
-                                                BorderBrush="Red"
+                                                Background="IndianRed"
+                                                BorderBrush="IndianRed"
                                                 Command="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}, Path=DataContext.StopMonitoringAppCommand}"
                                                 CommandParameter="{Binding}"
                                                 ToolTip="Stop monitoring this process">

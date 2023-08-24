@@ -25,4 +25,14 @@ public class DialogService : IDialogService
 
         await DialogHost.Show(view, "RootDialog");
     }
+
+    public async Task ShowActivation(object dataContext)
+    {
+        var view = new ActivationView()
+        {
+            DataContext = dataContext
+        };
+
+        await DialogHost.Show(view, "RootDialog");
+    }
 }

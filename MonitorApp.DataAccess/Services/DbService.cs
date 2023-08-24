@@ -64,7 +64,21 @@ public class DbService : IDbService
 
         con.Execute(createEmailDetailsTableQuery);
 
-        var insertTempData = """
+
+        const string createActivationTableQuery = """
+
+                                                    CREATE TABLE IF NOT EXISTS ActivationTable
+                                                    (
+                                                    Id INTEGER PRIMARY KEY,
+                                                    Key TEXT,
+                                                    Email TEXT
+                                                    );
+                                                    """;
+
+        con.Execute(createActivationTableQuery);
+
+
+        /*var insertTempData = """
 
                              INSERT INTO EmailDetails
                              (Email, Password, EmailTo)
@@ -75,11 +89,11 @@ public class DbService : IDbService
         var tempData = new
         {
             Email = "hammas143@gmail.com",
-            Password = "qcwuibfbzgehwgzd",
-            EmailTo = "raohammasofficial@gmail.com"
+            Password = "",
+            EmailTo = ""
         };
 
-        con.Execute(insertTempData, tempData);
+        con.Execute(insertTempData, tempData);*/
     }
 
 
@@ -183,5 +197,35 @@ public class DbService : IDbService
         const string query = "SELECT * FROM EmailDetails";
 
         return await con.QueryFirstOrDefaultAsync<EmailDetails>(query);
+    }
+
+    public async Task<int> ActivateAsync(string key, string email)
+    {
+        using IDbConnection con = new SqliteConnection(_connectionString);
+        const string insertQuery = """
+
+                                   INSERT INTO ActivationTable
+                                   (Key, Email)
+                                   VALUES
+                                   (@Key, @Email);
+                                   
+                                   SELECT last_insert_rowid();
+                                           
+                                   """;
+
+        return await con.QuerySingleAsync<int>(insertQuery, new {Key = key, Email = email});
+    }
+
+    
+    public async Task<string> GetActivationKeyAsync()
+    {
+        using IDbConnection con = new SqliteConnection(_connectionString);
+        const string selectQuery = """
+
+                                   SELECT Key FROM ActivationTable;
+                                           
+                                   """;
+
+        return await con.QuerySingleOrDefaultAsync<string>(selectQuery);
     }
 }

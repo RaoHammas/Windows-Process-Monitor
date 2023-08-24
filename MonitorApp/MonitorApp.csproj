@@ -20,6 +20,7 @@
 	</PropertyGroup>
 	<PropertyGroup>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 	<ItemGroup>
 		<Content Include="Images\icons8-heart-monitor-48.ico" />

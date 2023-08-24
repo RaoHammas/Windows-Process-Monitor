@@ -41,4 +41,9 @@ public interface IProcessHelper
     /// </summary>
     /// <returns>Session id of current process</returns>
     int GetCurrentProcessSessionId();
+
+    /// <summary>
+    /// Open keys activation page in browser
+    /// </summary>
+    void OpenActivationKeysLinkInBrowser();
 }

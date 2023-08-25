@@ -141,7 +141,7 @@ public partial class ShellViewModel : ObservableObject, IShell
         process.StartedAt = DateTime.UtcNow;
         process.SessionId = processStarted.SessionId;
         process.NoOfInstances = processStarted.NoOfInstances;
-        process.Status = ProcessStatus.Monitoring;
+        process.Status = ProcessStatus.Running;
         process.ProcessName = processStarted.ProcessName;
         process.DisplayName = processStarted.DisplayName;
         process.HasAWindow = processStarted.HasAWindow;
@@ -210,7 +210,7 @@ public partial class ShellViewModel : ObservableObject, IShell
             {
                 //means one instance is still running
                 process.NoOfInstances = processRunning.Count;
-                process.Status = ProcessStatus.Monitoring;
+                process.Status = ProcessStatus.Running;
                 await _dbService.SaveAsync(process);
             }
             else
@@ -218,10 +218,9 @@ public partial class ShellViewModel : ObservableObject, IShell
                 process.Status = ProcessStatus.Stopped;
                 process.StoppedAt = DateTime.UtcNow;
                 process.NoOfInstances = 0;
-                
+
                 await _dbService.SaveAsync(process);
             }
-
         }
 
         _processWatcherService.StartMonitoringAll(MonitoringProcesses.Select(x => x.ProcessName).ToList());
@@ -259,7 +258,7 @@ public partial class ShellViewModel : ObservableObject, IShell
 
             _processWatcherService.StartMonitoring(process.ProcessName);
             process.StartedAt = DateTime.UtcNow;
-            process.Status = ProcessStatus.Monitoring;
+            process.Status = ProcessStatus.Running;
             process.NoOfInstances = 1;
 
             var savedId = await _dbService.SaveAsync(process);
@@ -286,7 +285,7 @@ public partial class ShellViewModel : ObservableObject, IShell
             if (await _dbService.RemoveAsync(process.Id))
             {
                 MonitoringProcesses.Remove(process);
-                SnackbarControlViewModel.Show("App is successfully removed from the Monitoring list.");
+                SnackbarControlViewModel.Show("App is successfully removed from the Running list.");
             }
             else
             {
@@ -339,9 +338,8 @@ public partial class ShellViewModel : ObservableObject, IShell
         {
             await _dialogService.ShowActivation(_activationViewModel);
         }
-
     }
-   
+
     [RelayCommand]
     public void StartProcess(ProcessToMonitor process)
     {
@@ -392,6 +390,12 @@ public partial class ShellViewModel : ObservableObject, IShell
                     Thanks.
                     """;
         return body;
+    }
+
+    [RelayCommand]
+    public async Task OpenAboutUs()
+    {
+        await _dialogService.ShowAboutUsDialog();
     }
 
     public void Dispose()

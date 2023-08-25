@@ -6,9 +6,9 @@ public static class KeysHelper
 {
     private static readonly List<string> Keys = new()
     {
-        "925a4697de0cbf1a1b67b9eb9c97555f0d4ab8fd",
-        "72ec1ecc960a10758dafa6bebe7933fc2a7a4568",
-        "05c335118971567ddb6e28519da84acda65fbff4",
+        "f5456978457ab9e3bae492e3e93cf68d3f587924", //Fuck You!
+        "6d1de3e5742913752fe11b8e909ca021f511840c", //With love from Rao
+        "5082581e74ea5492ad622914588d61e6375714a9", //Buy me a coffee!
     };
 
 

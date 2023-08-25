@@ -35,4 +35,11 @@ public class DialogService : IDialogService
 
         await DialogHost.Show(view, "RootDialog");
     }
+
+    public async Task ShowAboutUsDialog()
+    {
+        var view = new AboutUsView();
+
+        await DialogHost.Show(view, "RootDialog");
+    }
 }

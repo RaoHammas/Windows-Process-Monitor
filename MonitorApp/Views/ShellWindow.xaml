@@ -67,7 +67,7 @@
                                     <md:Chip.Content>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Foreground="White">
-                                                <Run Text="TOTAL RUNNING PROCESSES | " />
+                                                <Run Text="RUNNING PROCESSES | " />
                                             </TextBlock>
                                             <TextBlock VerticalAlignment="Center" Foreground="White">
                                                 <Run
@@ -89,7 +89,7 @@
                                     <md:Chip.Content>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Foreground="White">
-                                                <Run Text="TOTAL MONITORING | " />
+                                                <Run Text="MONITORING | " />
                                             </TextBlock>
                                             <TextBlock VerticalAlignment="Center" Foreground="White">
                                                 <Run
@@ -194,6 +194,16 @@
                                     ToolTip="Click here to set email details">
                                     <md:PackIcon Kind="EmailEdit" />
                                 </Button>
+                                <Button
+                                    Height="30"
+                                    Margin="30,0,0,0"
+                                    Padding="10,5,10,5"
+                                    VerticalAlignment="Stretch"
+                                    Command="{Binding OpenAboutUsCommand}"
+                                    FontWeight="Bold"
+                                    ToolTip="Abut me">
+                                    <md:PackIcon Kind="About" />
+                                </Button>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -241,9 +251,7 @@
                                 <DataGridTemplateColumn
                                     Width="*"
                                     Header="Process Path"
-                                    HeaderStyle="{StaticResource DgHeaderCenter}"
-                                    SortDirection="Ascending"
-                                    SortMemberPath="Status">
+                                    HeaderStyle="{StaticResource DgHeaderCenter}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock
@@ -296,7 +304,6 @@
                                     Width="150"
                                     Header="Status"
                                     HeaderStyle="{StaticResource DgHeaderCenter}"
-                                    SortDirection="Ascending"
                                     SortMemberPath="Status">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -314,7 +321,7 @@
                                                 <Border.Style>
                                                     <Style TargetType="Border">
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Status}" Value="Monitoring">
+                                                            <DataTrigger Binding="{Binding Status}" Value="Running">
                                                                 <Setter Property="Background" Value="MediumSeaGreen" />
                                                                 <Setter Property="Effect">
                                                                     <Setter.Value>
@@ -399,7 +406,7 @@
                                                                     </Setter.Value>
                                                                 </Setter>
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Status}" Value="Monitoring">
+                                                            <DataTrigger Binding="{Binding Status}" Value="Running">
                                                                 <Setter Property="ToolTip" Value="Click to kill the process" />
                                                                 <Setter Property="Command" Value="{Binding ElementName=Win, Path=DataContext.KillProcessCommand}" />
                                                                 <Setter Property="CommandParameter" Value="{Binding}" />
@@ -501,7 +508,7 @@
                                     FontSize="28"
                                     FontWeight="Light"
                                     Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
-                                    Text="Monitoring is stopped for all processes" />
+                                    Text="Running is stopped for all processes" />
                             </StackPanel>
 
                         </Grid>
@@ -510,6 +517,7 @@
                 </Grid>
                 <controls:SnackbarControlView
                     MinWidth="400"
+                    Margin="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     DataContext="{Binding SnackbarControlViewModel}" />

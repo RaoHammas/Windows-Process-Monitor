@@ -3,6 +3,5 @@
 public enum ProcessStatus
 {
     Running,
-    Monitoring,
     Stopped,
 }

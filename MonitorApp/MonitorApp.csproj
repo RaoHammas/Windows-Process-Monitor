@@ -17,6 +17,7 @@
 		<NeutralLanguage>en</NeutralLanguage>
 		<RepositoryUrl>https://github.com/RaoHammas/Windows-Process-Monitor</RepositoryUrl>
 		<PackageTags>Windows, Process Monitor, Application</PackageTags>
+		<Platforms>AnyCPU;x64;x86;ARM32;ARM64</Platforms>
 	</PropertyGroup>
 	<PropertyGroup>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>

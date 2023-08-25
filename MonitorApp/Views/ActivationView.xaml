@@ -64,26 +64,36 @@
                 Activate
             </Button>
 
-            <TextBlock
+            <StackPanel
                 Grid.Row="4"
                 Margin="0,20,0,0"
                 HorizontalAlignment="Center"
-                Foreground="Gray">
-                <Run Text="If you don't have an activation key, then purchase from" />
-                <Run
-                    Cursor="Hand"
-                    Foreground="DodgerBlue"
-                    Text="here"
-                    TextDecorations="UnderLine"
-                    ToolTip="Click here to get activation keys">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="MouseLeftButtonDown">
-                            <b:InvokeCommandAction Command="{Binding GetKeyCommand}" />
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </Run>
-                <Run Text="to get one" />
-            </TextBlock>
+                Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center" Foreground="Gray" TextAlignment="Center">
+                    <Run Text="Email settings require Activation. " />
+                    <LineBreak/>
+                    <Run Text="After activation you'll be able to set email configurations" />
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Center" Foreground="Gray" Margin="0 5 0 0">
+                    <Run Text="If you don't have an activation key, then purchase from" />
+                    <Run
+                        Cursor="Hand"
+                        Foreground="DodgerBlue"
+                        Text="here"
+                        TextDecorations="UnderLine"
+                        ToolTip="Click here to get activation keys">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="MouseLeftButtonDown">
+                                <b:InvokeCommandAction Command="{Binding GetKeyCommand}" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </Run>
+                    <Run Text="to get one" />
+                </TextBlock>
+
+            </StackPanel>
+
         </Grid>
 
         <Grid

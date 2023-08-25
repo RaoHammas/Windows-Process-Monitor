@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -36,7 +37,7 @@ public partial class ShellViewModel : ObservableObject, IShell
     [ObservableProperty] private bool _showProcessesWithWindowsOnly;
     [ObservableProperty] private bool _showForCurrentUserOnly;
     [ObservableProperty] private IProcessSettingsViewModel _processSettingsViewModel;
-
+    private string _key;
 
     public ShellViewModel(
         IProcessHelper processHelper,
@@ -64,9 +65,9 @@ public partial class ShellViewModel : ObservableObject, IShell
 
         ShowProcessesWithWindowsOnly = false;
         _processWatcherService.ProcessStatusChanged += ProcessStatusChanged;
+
+        _key = _dbService.GetActivationKeyAsync().Result;
         ListenToMessages();
-
-
         LoadAllRunningProcessesCommand.ExecuteAsync(null);
         LoadAllMonitoringProcessesCommand.ExecuteAsync(null);
     }
@@ -95,32 +96,7 @@ public partial class ShellViewModel : ObservableObject, IShell
                     return;
                 }
 
-
-                process.StoppedAt = DateTime.UtcNow;
-                process.Status = ProcessStatus.Stopped;
-                process.NoOfInstances = 0;
-
-                _dbService.SaveAsync(process);
-                SnackbarControlViewModel.Show($"{process.DisplayName} has stopped running");
-
-                if (process.SendAlertEmail)
-                {
-                    var metadata = new EmailMetadata
-                    {
-                        Subject = $"{process.DisplayName} has stopped working",
-                        ToAddress = _emailSettingsViewModel.EmailDetails.Email,
-                        Body = GetEmailBody(process, "has stopped working")
-                    };
-
-                    var emailResp = _emailService.Send(metadata);
-
-                    SnackbarControlViewModel.Show($"{emailResp}");
-                }
-
-                if (process is { TryRestarting: true, RestartingAttempts: > 0 })
-                {
-                    _ = TryStartingApp(process);
-                }
+                _ = ProcessStopped(process);
             }
             else if (status == "Started")
             {
@@ -134,6 +110,36 @@ public partial class ShellViewModel : ObservableObject, IShell
             }
         }
     }
+
+    private async Task ProcessStopped(ProcessToMonitor process)
+    {
+        process.StoppedAt = DateTime.UtcNow;
+        process.Status = ProcessStatus.Stopped;
+        process.NoOfInstances = 0;
+
+        await _dbService.SaveAsync(process);
+        SnackbarControlViewModel.Show($"{process.DisplayName} has stopped running");
+
+        if (process.SendAlertEmail && !string.IsNullOrEmpty(_key))
+        {
+            var metadata = new EmailMetadata
+            {
+                Subject = $"{process.DisplayName} has stopped working",
+                ToAddress = _emailSettingsViewModel.EmailDetails.Email,
+                Body = GetEmailBody(process, "has stopped working")
+            };
+
+            var emailResp = await _emailService.Send(metadata);
+
+            SnackbarControlViewModel.Show(emailResp);
+        }
+
+        if (process is { TryRestarting: true, RestartingAttempts: > 0 })
+        {
+            _ = TryStartingApp(process);
+        }
+    }
+
 
     private async Task ProcessStarted(ProcessToMonitor process, ProcessToMonitor processStarted)
     {
@@ -150,7 +156,7 @@ public partial class ShellViewModel : ObservableObject, IShell
         await _dbService.SaveAsync(process);
         SnackbarControlViewModel.Show($"{processStarted.DisplayName} has started running again");
 
-        if (process.SendAlertEmail)
+        if (process.SendAlertEmail && !string.IsNullOrEmpty(_key))
         {
             var metadata = new EmailMetadata
             {
@@ -176,7 +182,7 @@ public partial class ShellViewModel : ObservableObject, IShell
                 break;
             }
 
-            if (process.SendAlertEmail)
+            if (process.SendAlertEmail && !string.IsNullOrEmpty(_key))
             {
                 var metadata = new EmailMetadata
                 {
@@ -323,8 +329,7 @@ public partial class ShellViewModel : ObservableObject, IShell
     [RelayCommand]
     public async Task OpenEmailSettings()
     {
-        var key = await _dbService.GetActivationKeyAsync();
-        if (KeysHelper.IsValidKey(key))
+        if (KeysHelper.IsValidKey(_key))
         {
             var mail = await _dbService.GetEmailDetailsAsync();
             if (mail != null)
@@ -337,6 +342,10 @@ public partial class ShellViewModel : ObservableObject, IShell
         else
         {
             await _dialogService.ShowActivation(_activationViewModel);
+            if (_activationViewModel.IsActivationSuccessful)
+            {
+                _key = await _dbService.GetActivationKeyAsync();
+            }
         }
     }
 

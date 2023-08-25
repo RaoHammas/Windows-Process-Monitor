@@ -108,7 +108,7 @@ public class ProcessHelper : IProcessHelper
             return null;
         }
 
-        monitor.ProcessName = process.MainModule!.ModuleName!;
+        monitor.ProcessName = monitor.FullPath.Split("\\").Last();
         return monitor;
     }
 

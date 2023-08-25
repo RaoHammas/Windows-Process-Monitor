@@ -2,6 +2,7 @@
 
 Download `v1.0.0.0` from [here.](https://github.com/RaoHammas/Windows-Process-Monitor/releases/tag/v1.0.0.0)<br />
 
+[![Windows Process Monitor v1.0.0.0](https://github.com/RaoHammas/Windows-Process-Monitor/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/RaoHammas/Windows-Process-Monitor/actions/workflows/dotnet-desktop.yml)
 
 ### Features
 

@@ -1,4 +1,4 @@
-name: .NET Core Desktop
+name: Windows Process Monitor v1.0.0.0
 
 on:
   push:

@@ -6,32 +6,31 @@ Download `v1.0.0.0` from [here.](https://github.com/RaoHammas/Windows-Process-Mo
 
 ### Features
 
-- **Comprehensive Process and Application Overview:** Gain a comprehensive overview of all running processes and applications on your system.
-
-- **Effortless Process Monitoring:** Seamlessly monitor individual processes and applications of your choice with ease.
-
-- **Instant Notifications:** Receive immediate notifications when a monitored process or application is unexpectedly terminated.
-
-- **Auto-Restart Functionality:** For processes set with an 'Auto Start' attribute, the application will diligently attempt to automatically restart them, minimizing downtime.
-
-- **Customizable Restart Attempts:** Tailor the number of retry attempts for automatically restarting a halted process according to your preferences.
-
-- **Manual Process Control:** Exercise manual control over processes by starting or stopping them directly from within the application.
-
-- **Real-Time Email Alerts:** Configure real-time email notifications for monitoring process state changes, including startups, shutdowns, or failed startup attempts.
-
-- **Activation for Email Feature:** To enable the email notification functionality, activation is required. Acquire your activation keys from [this link](https://www.buymeacoffee.com/hammas/e/161857).
-
-- **Built with Cutting-Edge Technology:** Developed using the latest .Net 6 framework, ensuring optimal performance and compatibility.
-
-- **Broad Windows Compatibility:** Designed to operate seamlessly on Windows 10 and Windows 11, with potential support for Windows 7.
+- [x] Gain a comprehensive overview of all running processes and applications on your system.
+- [x] Seamlessly monitor individual processes and applications of your choice with ease.
+- [x] Receive immediate notifications when a monitored process or application is unexpectedly terminated.
+- [x] For processes set with an 'Auto Start' attribute, the application will diligently attempt to automatically restart them, minimizing downtime.
+- [x] Tailor the number of retry attempts for automatically restarting a halted process according to your preferences.
+- [x] Exercise manual control over processes by starting or stopping them directly from within the application.
+- [x] Configure real-time email notifications for monitoring process state changes, including startups, shutdowns, or failed startup attempts.
+- [x] To enable the email notification functionality, activation is required. Acquire your activation keys from [this link](https://www.buymeacoffee.com/hammas/e/161857).
+- [x] Developed using the latest .Net 6 framework, ensuring optimal performance and compatibility.
+- [x] Designed to operate seamlessly on Windows 10 and Windows 11, with potential support for Windows 7.
 
 *Design and Development with ❤️*
 
 > The email notification feature requires activation. You can obtain the activation keys by supporting my work with a small contribution, which would be greatly appreciated. If, however, you're unable to make a purchase but still require this feature, simply create an issue, and I'll be happy to provide you with the keys at no cost. 😊
 
 
-[!["Buy Me A Coffee buy purchasing activation key"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/hammas/e/161857)
+---
+
+### **_If you like this app, Please consider donating. Thanks 😊_**  
+
+<a href="https://www.buymeacoffee.com/hammas" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+<img src="https://i.imgur.com/Grv4olx.png" width="200" height="200" />
+
+---
 
 
 
